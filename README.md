@@ -69,6 +69,13 @@ All test will pass with output:
 - Rotates clockwise or counterclockwise
 - Display the updated cube
 
+**Feature 3 Includes:**
+- Writes cube state to file
+- Uses CubeSaver class
+- Saves cube name and face colors
+- Integrates with cube creation & rotation features
+
+
 ---
 
 ##  Reflection Documents
