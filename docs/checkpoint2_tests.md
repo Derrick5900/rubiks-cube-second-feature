@@ -1,9 +1,5 @@
 # Checkpoint 2: Test Cases
 
-## Test 1: Normal rotation
-- **Purpose:** Verify that rotating the front face clockwise updates the cube.
-- **Setup:** Start program -> option 1 to create cube -> option 2 -> face `F`, direction `C`.
-- **Expected Result:** `F` face characters move to new positions (rotated) and cube prints with no errors.
 
 ## Test 2: Invalid face
 - **Purpose:** Handle invalid face input.

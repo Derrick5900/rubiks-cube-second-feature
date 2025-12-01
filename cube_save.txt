@@ -1,0 +1,29 @@
+Face 0
+WWW
+WWW
+WWW
+
+Face 1
+YYY
+YYY
+YYY
+
+Face 2
+OOO
+OOO
+OOO
+
+Face 3
+RRR
+RRR
+RRR
+
+Face 4
+GGG
+GGG
+GGG
+
+Face 5
+BBB
+BBB
+BBB

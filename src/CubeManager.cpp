@@ -1,79 +1,110 @@
 #include "CubeManager.h"
-
+#include "CubeSaver.h"
 #include <iostream>
-#include <limits>
-#include <cctype>
-#include <stdexcept>
+
 
 using std::cout;
 using std::cin;
-using std::endl;
+using std::string;
 
-namespace {
+// ---------------------------------------------
+// Add a cube to the manager
+// ---------------------------------------------
+void CubeManager::addCube(const Cube& cube) {
+    cubes.push_back(cube);
+}
 
-    Face charToFace(char ch) {
-        ch = static_cast<char>(std::toupper(static_cast<unsigned char>(ch)));
+// ---------------------------------------------
+// How many cubes are stored?
+// ---------------------------------------------
+int CubeManager::getCubeCount() const {
+    return static_cast<int>(cubes.size());
+}
+
+// -------------------------------------
+// First cube (const)
+// -------------------------------------
+const Cube* CubeManager::getFirst() const {
+    if (cubes.empty()) return nullptr;
+    return &cubes.front();
+}
+
+// --------------------------------------
+// Return first cube (non-const)
+// -------------------------------------
+Cube* CubeManager::getFirst() {
+    if (cubes.empty()) return nullptr;
+    return &cubes.front();
+}
+
+// --------------------------------------
+// Display all cubes
+// ---------------------------------------
+void CubeManager::displayAll() const {
+    if (cubes.empty()) {
+        cout << "No cubes in manager.\n";
+        return;
+    }
+    for (const auto& c : cubes) {
+        c.display();  // <- now OK; c is a Cube
+    }
+}
+
+// -----------------------------------------------
+// helper: read face letter (U, D, L, R, F, B)
+// ------------------------------------------------
+static Face readFaceFromUser() {
+    while (true) {
+        cout << "Choose face (U/D/L/R/F/B): ";
+        char ch;
+        cin >> ch;
+
         switch (ch) {
-            case 'U': return Face::U;
-            case 'D': return Face::D;
-            case 'L': return Face::L;
-            case 'R': return Face::R;
-            case 'F': return Face::F;
-            case 'B': return Face::B;
-            default:
-                throw std::invalid_argument("Invalid face character");
+            case 'U': case 'u': return Face::U;
+            case 'D': case 'd': return Face::D;
+            case 'L': case 'l': return Face::L;
+            case 'R': case 'r': return Face::R;
+            case 'F': case 'f': return Face::F;
+            case 'B': case 'b': return Face::B;
         }
+
+        cout << "Invalid face. try again.\n";
     }
-} // end anonymous namespace
-
-CubeManager::CubeManager()
-    : cube("Untitled"), hasCube(false) {
-
 }
 
-// ===== Feature 1 ========
-void CubeManager::createSolvedCubeAndDisplay() {
-    std::string name;
-    cout << "Enter cube name (or leave blank for 'Untitled'): ";
-    std::getline(cin, name);
-    if (name.empty()) {
-        name = "Untitled";
-    }
-
-    cube = Cube(name);  // create solved cube with that name
-    hasCube = true;
-
-    cout << "Created solved cube.\n";
-    cube.display();
-}
-
-// ======= Feature 2 ========
+// -------------------------------------------------------
+// Feature 2: rotation runner
+// -------------------------------------------------------
 void CubeManager::runRotateFaceFeature() {
-    if (!hasCube) {
-        cout << "No cube created yet. Please use option 1 first.\n";
+    Cube* cube = getFirst();
+    if (!cube) {
+        cout << "No cubes available.\n";
         return;
     }
 
-    char faceInput;
-    cout << "Enter face to rotate (U, D, L, R, F, B) ";
-    cin >> faceInput;
+    Face face = readFaceFromUser();
 
-    char dirInput;
-    cout << "Enter direction (C for clockwise, A for anticlockwise); ";
-    cin >> dirInput;
+    int dir;
+    cout << "1) Clockwise\n2) Counter-clockwise\nChoice: ";
+    cin >> dir;
 
-    bool clockwise = (dirInput == 'C' || dirInput == 'c');
+    bool clockwise = (dir == 1);
+    cube->rotateFace(face, clockwise);
+    cube->display();
+}
 
-    try {
-        Face face = charToFace(faceInput);
-        cube.rotateFace(face, clockwise);
-
-        cout << "Rotated face " << faceInput << (clockwise ? " clockwise.\n" : " counterclockwise.\n");
-        cube.display();
-    } catch (const std::exception& ex) {
-        cout << "Error: " << ex.what() << '\n';
+// ---------------------------------------------------------------
+// Feature 3: save first cube to file
+// ---------------------------------------------------------------
+void CubeManager::saveFirstCube(const std::string& fileName) const {
+    const Cube* cube = getFirst();
+    if (!cube) {
+        cout << "No cubes available.\n";
+        return;
     }
 
-    // clear leftover newline
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    CubeSaver saver(*cube, fileName);
+    saver.save();
+
+    cout << "Cube saved to '" << fileName << "'.\n";
 }

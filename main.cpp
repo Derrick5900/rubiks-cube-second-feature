@@ -1,19 +1,20 @@
 #include <iostream>
 #include <limits>
-#include "include/CubeManager.h"
-#include "include/Cube.h"
+#include "CubeManager.h"
 
 using std::cin;
 using std::cout;
-using std::endl;
+using std::string;
 
-int main() {
+int main()
+{
     CubeManager manager;
 
     while (true) {
         cout << "\n=== Rubik's Cube Manger ===\n";
         cout << "1) Create solved cube and display all cubes\n";
         cout << "2) Rotate a cube face\n";
+        cout << "3) Save first cube to file\n";
         cout << "0) Exit\n";
         cout << "Choice: ";
 
@@ -22,29 +23,35 @@ int main() {
             // input validation
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            cout << "Invalid input, try again.\n";
-            continue;
+            cout << "Invalid input.\n";
+            continue;;
         }
 
-        // Clear leftover newline
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        if (choice == 0) {
+            if (choice == 0) {
             cout << "Goodbye!\n";
             break;
         }
 
         if (choice == 1) {
-            manager.createSolvedCubeAndDisplay();
-            continue;
-        }
+            cout << "Enter cube name (or leave blank for 'Untitled'):";
+            string name;
+            std::getline(std::cin, name);
+            if (name.empty()) name = "Untitled";
 
-        if (choice == 2) {
+            Cube cube(name);
+            manager.addCube(cube);
+
+            cout << "\nCreated cube and displaying all cubes:\n";
+            manager.displayAll();
+        } else if (choice == 2) {
             manager.runRotateFaceFeature();
-            continue;
+        } else if (choice == 3) {
+            manager.saveFirstCube("cube_save.txt");
+        } else {
+            cout << "Invalid choice.\n";
         }
-
-        std::cout << "Unknown option, try again.\n";
     }
 
     return 0;

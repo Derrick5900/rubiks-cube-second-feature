@@ -3,25 +3,36 @@
 ## Feature Name
 Rotate Cube Face
 
-## Description
-This feature lets the user rotate one face of the Rubik's Cube (example the front, back, left, right, up, or down face) and then displays the updated cube. The user chooses which face and the direction of the rotation.
+## Feature 2: adds the ability for cube to:
+- Rotate a face of a cube (simplified rotation)
+- Update the cube's internal 3x3 face grids after a rotation
+- Display the cube after the rotation to verify correctness
+- Provide user interaction to choose which face to rotate.
 
-## Why this feature?
-Rotating faces is a key action in any Rubik's Cube game. This feature builds on my first feature, which creates a solved cube and displays all faces. Now, instead of only viewing a solved cube, the user can start changing the cube's state in a controlled way.
+At this stage, pointer-based `Side` objects are **not** used yet; the rotation works directly on the cube's `FaceGrid` arrays.
 
-## Classes Involved
-- `Cube` - stores the cube's faces and squares; will get new methods to rotate faces.
-- `CubeManager` - manages the `Cube` object and connects the feature to the menu in `main.cpp`.
-- Any helper structs or enums if needed to represent faces or directions.
+## Task to Complete
+1. Add helper function `rotateFaceGridOnly(Face f, bool clockwise)` inside `Cube`.
+2. Add `rotateFace(Face f, bool clockwise)` which calls the helper.
+3. Implement rotation for the selected face using the pattern:
+   - `(r,c) -> (c, 2 - r)` for clockwise
+   - `(r,c) -> (2 - c, r) for counterclockwise
+4. Add menu option in `CubeManager`:
+   - Ask the user which face to rotate (U/D/L/R/F/B)
+   - Ask for direction (clockwise or counter-clockwise)
+5. After a rotation:
+- display cube to visually confirm the rotation.
 
-## Expected User Workflow
-1. User runs the program and sees the main menu.
-2. User chooses menu option 2: Rotate a cube face.
-3. Program ask which face to rotate(example: F, B, L, R, U,D).
-4. Program ask for direction (clockwise or counterclockwise).
-5. Program applies the rotation to the `Cube` object.
-6. Program displays the cube again so the user can see the updated state.
-7. The user returns to the menu and can rotate more faces or exit.
+## Expected Output
+After rotating a face:
+Face O
+WWW
+WWW
+WWW
 
-## Estimated Time
-3-4 hours of focused work, including planning, implementation, testing, and documentation.
+Face 1
+YYY
+YYY
+YYY
+
+...updated faces after rotation...

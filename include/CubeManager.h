@@ -1,20 +1,29 @@
 #pragma once
-
-#include "Cube.h"
+#include <vector>
 #include <string>
+#include "Cube.h"
 
 class CubeManager {
-private:
-    Cube cube;
-    bool hasCube;
-
 public:
-    CubeManager();
+    // Add a cube to the manager
+    void addCube( const Cube& cube);
 
-    // ===== Feature 1 =======
-    void createSolvedCubeAndDisplay();
+    // How many cubes?
+    int getCubeCount() const;
 
-    // ===== Feature 2 ========
+    // First cube (const + non-const overloads)
+    Cube* getFirst();
+    const Cube* getFirst() const;
+
+    // Show all cubes
+    void displayAll() const;
+
+    // Feature 2: (rotate face)
     void runRotateFaceFeature();
 
+    // Save first cube to file
+    void saveFirstCube(const std::string& fileName) const;
+
+private:
+    std::vector<Cube> cubes;
 };
