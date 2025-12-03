@@ -75,8 +75,14 @@ All test will pass with output:
 - Saves cube name and face colors
 - Integrates with cube creation & rotation features
 
-
----
+**Feature 4 Includes**
+- loads the first cube from a saved text file
+- Uses CubeLoader class
+- Restores all 6 faces and their colors from cube_save.txt
+- Integrates with cube creation & file-saving features
+- Prints confirmation message when load is successful
+- Handles "no cubes available" safely
+- Allows the User to reload cube state at any time from the menu.
 
 ##  Reflection Documents
 Located in `docs/`:

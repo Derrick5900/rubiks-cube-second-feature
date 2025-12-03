@@ -12,7 +12,7 @@ public:
     int getCubeCount() const;
 
     // First cube (const + non-const overloads)
-    Cube* getFirst();
+    Cube*       getFirst();
     const Cube* getFirst() const;
 
     // Show all cubes
@@ -21,8 +21,11 @@ public:
     // Feature 2: (rotate face)
     void runRotateFaceFeature();
 
-    // Save first cube to file
+    // Feature 3: save first cube to file
     void saveFirstCube(const std::string& fileName) const;
+
+    // Feature 4: load first cube from file
+    void loadFirstCube(const std::string& fileName);
 
 private:
     std::vector<Cube> cubes;

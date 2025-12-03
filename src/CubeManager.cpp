@@ -1,7 +1,9 @@
 #include "CubeManager.h"
 #include "CubeSaver.h"
-#include <iostream>
+#include "Cubeloader.h"
 
+#include <iostream>
+#include <limits>
 
 using std::cout;
 using std::cin;
@@ -14,30 +16,25 @@ void CubeManager::addCube(const Cube& cube) {
     cubes.push_back(cube);
 }
 
-// ---------------------------------------------
-// How many cubes are stored?
-// ---------------------------------------------
 int CubeManager::getCubeCount() const {
     return static_cast<int>(cubes.size());
 }
 
-// -------------------------------------
-// First cube (const)
-// -------------------------------------
-const Cube* CubeManager::getFirst() const {
-    if (cubes.empty()) return nullptr;
-    return &cubes.front();
-}
-
-// --------------------------------------
-// Return first cube (non-const)
-// -------------------------------------
 Cube* CubeManager::getFirst() {
-    if (cubes.empty()) return nullptr;
-    return &cubes.front();
+    if (cubes.empty()) {
+        return nullptr;
+    }
+    return &cubes[0];
 }
 
-// --------------------------------------
+
+const Cube* CubeManager::getFirst() const {
+    if (cubes.empty()) {
+        return nullptr;
+    }
+    return &cubes[0];
+}
+
 // Display all cubes
 // ---------------------------------------
 void CubeManager::displayAll() const {
@@ -51,13 +48,39 @@ void CubeManager::displayAll() const {
 }
 
 // -----------------------------------------------
-// helper: read face letter (U, D, L, R, F, B)
-// ------------------------------------------------
+// helper: read face & int -----------------------
+
+// Read an int in [lo, hi]
+static int readIntInRange(int lo, int hi) {
+    while (true) {
+        int value;
+        cin >> value;
+
+        if (!cin) {
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cout << "Invalid number. Try again: ";
+            continue;
+        }
+
+        if (value < lo || value > hi) {
+            cout << "Please enter a value between "
+                 << lo << " and " << hi << ": ";
+            continue;
+        }
+
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return value;
+    }
+}
+
+// Read a face letter from thr user (U / D / L / R / F / B)
 static Face readFaceFromUser() {
     while (true) {
         cout << "Choose face (U/D/L/R/F/B): ";
         char ch;
         cin >> ch;
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (ch) {
             case 'U': case 'u': return Face::U;
@@ -66,9 +89,10 @@ static Face readFaceFromUser() {
             case 'R': case 'r': return Face::R;
             case 'F': case 'f': return Face::F;
             case 'B': case 'b': return Face::B;
+            default:
+                cout << "Invalid face, Try again.\n";
+                break;
         }
-
-        cout << "Invalid face. try again.\n";
     }
 }
 
@@ -84,13 +108,14 @@ void CubeManager::runRotateFaceFeature() {
 
     Face face = readFaceFromUser();
 
-    int dir;
-    cout << "1) Clockwise\n2) Counter-clockwise\nChoice: ";
-    cin >> dir;
-
+    cout << "1) Clockwise\n"
+         << "2) Counter-Clockwise\n"
+         << "3) Choice: ";
+    int dir = readIntInRange(1, 2);
     bool clockwise = (dir == 1);
+
     cube->rotateFace(face, clockwise);
-    cube->display();
+    cout << "Face rotated.\n";
 }
 
 // ---------------------------------------------------------------
@@ -107,4 +132,19 @@ void CubeManager::saveFirstCube(const std::string& fileName) const {
     saver.save();
 
     cout << "Cube saved to '" << fileName << "'.\n";
+}
+
+// ---- Feature 4: load first cube ------------------------
+
+void CubeManager::loadFirstCube(const std::string& fileName) {
+    Cube* cube = getFirst();
+    if (!cube) {
+        cout << "No cubes available.\n";
+        return;
+    }
+
+    CubeLoader loader(*cube, fileName);
+    loader.load();
+
+    cout << "Cube loaded from '" << fileName << "'.\n";
 }

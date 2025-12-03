@@ -19,9 +19,9 @@ RRR
 RRR
 
 Face 4
-GGG
-GGG
-GGG
+UUU
+UUU
+UUU
 
 Face 5
 BBB
